@@ -13,7 +13,6 @@ import { EDITOR_ITEM_TYPES } from './EditorItemType';
 import Q from 'q';
 
 const createElement = (type, props, children = []) => {
-	console.trace('createElement:', type, props, children);
 	return { type, props, children };
 };
 
@@ -21,13 +20,11 @@ const renderVisibleContent = (
 	idx,
 	{ type, parent = 'root', props, children = [] }
 ) => {
-	console.trace('render this type:', type, children);
 	const key = parent + '_' + idx;
 	const myChildren =
 		typeof children === 'string'
 			? children
 			: children.map((child, ci) => {
-					console.log('child is', child);
 					return renderVisibleContent(ci, { ...child, parent: key });
 			  });
 
@@ -129,18 +126,20 @@ const RumorEditor = forwardRef((props, ref) => {
 		setAction({ focused: false });
 	};
 
-	const setInitLine = (selType, initText) => {
-		const currItem = createElement(selType, {}, initText);
-		setAction({ lines: [[currItem]], selectedIndex: [0, 0] });
-	};
+	const setInitLine = useCallback(
+		(selType, initText) => {
+			const currItem = createElement(selType, {}, initText);
+			setAction({ lines: [[currItem]], selectedIndex: [0, 0] });
+		},
+		[setAction]
+	);
 
 	useEffect(() => {
 		if (focused) onFocus?.(ref);
 		else onBlur?.(ref);
 	}, [focused, ref, onFocus, onBlur]);
 
-	const onEditorFocused = () => {
-		console.log('selected');
+	const onEditorFocused = useCallback(() => {
 		Q.fcall(() => inputRef.current.focus())
 			.then(() => {
 				if (lines.length === 0) {
@@ -155,13 +154,13 @@ const RumorEditor = forwardRef((props, ref) => {
 			.then(() => setAction({ focused: true }))
 			.catch(console.error)
 			.done();
-	};
+	}, [setInitLine, setAction, onEditorClick, lines, ref, selectedType]);
 
 	useImperativeHandle(
 		ref,
 		() => ({
 			clear: () => {
-				Q.fcall(() => setAction({ text: '' }))
+				Q.fcall(resetState)
 					.then(() => setInitLine(selectedType, ''))
 					.catch(console.error)
 					.done();
@@ -171,16 +170,13 @@ const RumorEditor = forwardRef((props, ref) => {
 				setTimeout(() => {
 					inputRef.current?.blur();
 				});
-				console.log('blur');
 			},
 		}),
-		[]
+		[resetState, setInitLine, selectedType, onEditorFocused]
 	);
 
 	const visibleContents = () => {
 		return lines.map((line, idx) => {
-			console.log('====>', { line });
-			console.log('lint-type:', line[0].type, line.line);
 			const lineKey = 'line-' + idx;
 			return (
 				<p key={lineKey}>

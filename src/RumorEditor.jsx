@@ -139,7 +139,7 @@ const RumorEditor = forwardRef((props, ref) => {
 		else onBlur?.(ref);
 	}, [focused, ref, onFocus, onBlur]);
 
-	const onContainerClick = () => {
+	const onEditorFocused = () => {
 		console.log('selected');
 		Q.fcall(() => inputRef.current.focus())
 			.then(() => {
@@ -166,11 +166,7 @@ const RumorEditor = forwardRef((props, ref) => {
 					.catch(console.error)
 					.done();
 			},
-			focus: () => {
-				setTimeout(() => {
-					inputRef.current?.focus();
-				});
-			},
+			focus: onEditorFocused,
 			blur: () => {
 				setTimeout(() => {
 					inputRef.current?.blur();
@@ -200,7 +196,7 @@ const RumorEditor = forwardRef((props, ref) => {
 		focused && classes.containerFocused
 	}`;
 	return (
-		<div className={containerClass} onClick={onContainerClick}>
+		<div className={containerClass} onClick={onEditorFocused}>
 			<input
 				ref={inputRef}
 				className={classes.inputBox}
