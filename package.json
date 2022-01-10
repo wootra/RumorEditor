@@ -1,0 +1,56 @@
+{
+	"name": "@shjeon0730/rumor-editor",
+	"version": "1.0.0",
+	"description": "Editor which is used in roomor.page ",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"publish:npm": "rm -rf dist; mkdir dist; babel src -d dist --copy-files --minified --compact true -s true --no-comments --presets @babel/preset-react"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com:wootra/RumorEditor.git"
+	},
+	"author": "SONGHYEON JUN <shjeon0730@gmail.com>",
+	"license": "GNU GENERAL PUBLIC LICENSE Version 3",
+	"keywords": [
+		"free-editor",
+		"simple-editor",
+		"editor",
+		"free",
+		"simple"
+	],
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"babel": {
+		"presets": [
+			"@babel/preset-react"
+		]
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"private": false,
+	"dependencies": {
+		"q": "^1.5.1"
+	},
+	"peerDependencies": {
+		"react": "^17.0.2"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.16.7",
+		"@babel/preset-react": "^7.16.7",
+		"react-scripts": "^5.0.0"
+	}
+}
